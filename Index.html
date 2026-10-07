@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEOFACT — интересные и необычные факты о мире">
+<title>NEOFACT — Факты, которые удивляют</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #090b10;
+    --card: #141821;
+    --card-hover: #1b202b;
+    --text: #f5f7fb;
+    --muted: #9ba3b2;
+    --accent: #7c5cff;
+    --accent-light: #a995ff;
+    --border: rgba(255,255,255,.08);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(circle at 50% -10%, #30245d 0%, #090b10 38%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.container {
+    width: min(1120px, calc(100% - 32px));
+    margin: auto;
+}
+
+/* HEADER */
+
+header {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+    background: rgba(9,11,16,.65);
+    backdrop-filter: blur(15px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--accent-light);
+}
+
+.nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* HERO */
+
+.hero {
+    text-align: center;
+    padding: 80px 0 55px;
+}
+
+.badge {
+    display: inline-block;
+    color: var(--accent-light);
+    background: rgba(124,92,255,.12);
+    border: 1px solid rgba(124,92,255,.25);
+    border-radius: 100px;
+    padding: 7px 13px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: clamp(45px, 9vw, 80px);
+    line-height: .95;
+    letter-spacing: -4px;
+    margin-bottom: 22px;
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 650px;
+    margin: auto;
+    font-size: 17px;
+}
+
+.random-btn {
+    margin-top: 30px;
+    padding: 15px 23px;
+    border: none;
+    border-radius: 14px;
+    background: var(--accent);
+    color: white;
+    font-weight: 800;
+    font-size: 15px;
+    box-shadow: 0 10px 35px rgba(124,92,255,.25);
+    transition: .2s;
+}
+
+.random-btn:hover {
+    transform: translateY(-2px);
+    background: #8d73ff;
+}
+
+/* CATEGORIES */
+
+section {
+    padding: 30px 0 65px;
+}
+
+.section-title {
+    font-size: 27px;
+    margin-bottom: 18px;
+}
+
+.categories {
+    display: flex;
+    gap: 9px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+}
+
+.categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category {
+    flex: 0 0 auto;
+    padding: 10px 15px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: #dce1ea;
+    transition: .2s;
+}
+
+.category:hover,
+.category.active {
+    background: var(--accent);
+    color: white;
+    border-color: transparent;
+}
+
+/* FACT CARDS */
+
+.fact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.fact {
+    min-height: 250px;
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: linear-gradient(145deg, #151923, #10131a);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.fact:hover {
+    transform: translateY(-5px);
+    background: var(--card-hover);
+    border-color: rgba(169,149,255,.35);
+}
+
+.fact::after {
+    content: "";
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    background: var(--accent);
+    filter: blur(60px);
+    opacity: .12;
+}
+
+.fact-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.icon {
+    font-size: 31px;
+}
+
+.tag {
+    color: var(--accent-light);
+    background: rgba(124,92,255,.1);
+    border-radius: 100px;
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+.fact h3 {
+    font-size: 20px;
+    line-height: 1.25;
+    margin-bottom: 11px;
+}
+
+.fact p {
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.fact-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+    color: #687181;
+    font-size: 12px;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    position: relative;
+    width: min(600px,100%);
+    background: #151923;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 30px;
+}
+
+.close {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+    border: none;
+    background: transparent;
+    color: #8d96a6;
+    font-size: 30px;
+}
+
+.modal-icon {
+    font-size: 50px;
+    margin-bottom: 12px;
+}
+
+.modal h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.modal p {
+    color: var(--muted);
+    font-size: 16px;
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    color: #687181;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px) {
+    .fact-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width:560px) {
+
+    .container {
+        width: calc(100% - 22px);
+    }
+
+    .nav-link {
+        display: none;
+    }
+
+    .hero {
+        padding: 60px 0 35px;
+    }
+
+    h1 {
+        letter-spacing: -2.5px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .fact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fact {
+        min-height: 220px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+        <a href="#" class="logo">NEO<span>FACT</span></a>
+        <a href="#facts" class="nav-link">Все факты ↓</a>
+    </div>
+</header>
+
+<main>
+
+<section class="hero">
+    <div class="container">
+
+        <div class="badge">
+            ✦ Интересное начинается здесь
+        </div>
+
+        <h1>
+            Факты, которые<br>
+            удивляют.
+        </h1>
+
+        <p>
+            Короткие и необычные факты о мире,
+            науке, истории, людях, животных
+            и технологиях.
+        </p>
+
+        <button class="random-btn" onclick="randomFact()">
+            🎲 Случайный факт
+        </button>
+
+    </div>
+</section>
+
+<section id="facts">
+
+<div class="container">
+
+    <h2 class="section-title">
+        Выбери тему
+    </h2>
+
+    <div class="categories" id="categories"></div>
+
+    <div class="fact-grid" id="factGrid"></div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+    NEOFACT © 2026 · Факты, которые хочется пересказать
+</footer>
+
+
+<!-- ОКНО ФАКТА -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <button class="close" onclick="closeModal()">
+            ×
+        </button>
+
+        <div class="modal-icon" id="modalIcon"></div>
+
+        <h2 id="modalTitle"></h2>
+
+        <p id="modalText"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const facts = [
+
+{
+    category:"Наука",
+    icon:"🔬",
+    title:"Венера вращается необычно",
+    text:"Венера вращается вокруг своей оси в направлении, противоположном вращению большинства планет Солнечной системы."
+},
+
+{
+    category:"Космос",
+    icon:"🌌",
+    title:"На Венере день длиннее года",
+    text:"Венере требуется больше времени для полного оборота вокруг своей оси, чем для обращения вокруг Солнца."
+},
+
+{
+    category:"Животные",
+    icon:"🐙",
+    title:"У осьминога три сердца",
+    text:"У осьминога три сердца: два перекачивают кровь через жабры, а третье обеспечивает кровообращение остального тела."
+},
+
+{
+    category:"Животные",
+    icon:"🦒",
+    title:"У жирафа огромное давление",
+    text:"Сердцу жирафа приходится создавать очень высокое давление, чтобы доставлять кровь к голове через длинную шею."
+},
+
+{
+    category:"История",
+    icon:"🏛️",
+    title:"Оксфорд старше империи ацтеков",
+    text:"Преподавание в Оксфорде существовало задолго до появления Ацтекской империи."
+},
+
+{
+    category:"Психология",
+    icon:"🧠",
+    title:"Мозг использует шаблоны",
+    text:"Мозг постоянно использует знакомые шаблоны, чтобы быстрее обрабатывать информацию и принимать решения."
+},
+
+{
+    category:"Технологии",
+    icon:"💻",
+    title:"Первый сайт появился в 1991 году",
+    text:"Первый веб-сайт создал Тим Бернерс-Ли. Он рассказывал о технологии World Wide Web и объяснял, как ей пользоваться."
+},
+
+{
+    category:"Космос",
+    icon:"🌕",
+    title:"Следы на Луне могут сохраняться очень долго",
+    text:"На Луне практически нет атмосферы, ветра и дождя, поэтому следы астронавтов не стираются так, как на Земле."
+},
+
+{
+    category:"Наука",
+    icon:"⚡",
+    title:"Молния невероятно горячая",
+    text:"Температура внутри канала мощной молнии может достигать примерно 30 000 К."
+},
+
+{
+    category:"Природа",
+    icon:"🌳",
+    title:"Растения могут взаимодействовать через почву",
+    text:"Растения способны обмениваться некоторыми веществами через почву и сети симбиотических грибов."
+},
+
+{
+    category:"Животные",
+    icon:"🦈",
+    title:"Акулы старше динозавров",
+    text:"Первые представители акул появились сотни миллионов лет назад — задолго до первых динозавров."
+},
+
+{
+    category:"История",
+    icon:"📜",
+    title:"Клеопатра ближе к нам, чем к пирамидам",
+    text:"Клеопатра жила значительно ближе по времени к высадке человека на Луне, чем к строительству Великой пирамиды в Гизе."
+},
+
+{
+    category:"Наука",
+    icon:"🧪",
+    title:"Стекло не имеет обычной кристаллической структуры",
+    text:"Стекло относится к аморфным твёрдым веществам: его частицы не образуют регулярную кристаллическую решётку."
+},
+
+{
+    category:"Мир",
+    icon:"🌍",
+    title:"Экватор проходит через Африку",
+    text:"Экватор пересекает территорию нескольких государств Африки."
+},
+
+{
+    category:"Технологии",
+    icon:"📱",
+    title:"Первый мобильный звонок сделали в 1973 году",
+    text:"Первый публично продемонстрированный звонок с портативного мобильного телефона состоялся в 1973 году."
+},
+
+{
+    category:"Психология",
+    icon:"👁️",
+    title:"Наше внимание ограничено",
+    text:"Человек не способен одинаково подробно обрабатывать огромное количество независимых стимулов одновременно."
+},
+
+{
+    category:"Космос",
+    icon:"☀️",
+    title:"Солнце содержит почти всю массу Солнечной системы",
+    text:"На Солнце приходится подавляющая часть всей массы Солнечной системы."
+},
+
+{
+    category:"Животные",
+    icon:"🐘",
+    title:"Слоны способны узнавать себя",
+    text:"Слоны относятся к животным, у которых наблюдались признаки самораспознавания в зеркале."
+},
+
+{
+    category:"Природа",
+    icon:"🌊",
+    title:"Океан покрывает большую часть Земли",
+    text:"Мировой океан покрывает около 71% поверхности нашей планеты."
+},
+
+{
+    category:"Наука",
+    icon:"💎",
+    title:"Алмаз и графит состоят из одного элемента",
+    text:"И алмаз, и графит состоят в основном из углерода. Их совершенно разные свойства связаны со структурой атомов."
+}
+
+];
+
+let currentCategory = "Все";
+
+const categories = [
+    "Все",
+    ...new Set(facts.map(f => f.category))
+];
+
+
+// СОЗДАЁМ КАТЕГОРИИ
+
+function renderCategories() {
+
+    const container =
+        document.getElementById("categories");
+
+    container.innerHTML = "";
+
+    categories.forEach(category => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "category " +
+            (category === currentCategory
+                ? "active"
+                : "");
+
+        button.textContent = category;
+
+        button.onclick = () => {
+
+            currentCategory = category;
+
+            renderCategories();
+            renderFacts();
+
+        };
+
+        container.appendChild(button);
+
+    });
+
+}
+
+
+// СОЗДАЁМ КАРТОЧКИ
+
+function renderFacts() {
+
+    const grid =
+        document.getElementById("factGrid");
+
+    grid.innerHTML = "";
+
+    const visibleFacts =
+        currentCategory === "Все"
+        ? facts
+        : facts.filter(
+            fact => fact.category === currentCategory
+        );
+
+    visibleFacts.forEach((fact,index) => {
+
+        const card =
+            document.createElement("article");
+
+        card.className = "fact";
+
+        card.innerHTML = `
+
+            <div class="fact-top">
+
+                <span class="icon">
+                    ${fact.icon}
+                </span>
+
+                <span class="tag">
+                    ${fact.category}
+                </span>
+
+            </div>
+
+            <h3>
+                ${fact.title}
+            </h3>
+
+            <p>
+                ${fact.text}
+            </p>
+
+            <div class="fact-bottom">
+                Нажми, чтобы открыть →
+            </div>
+        `;
+
+        card.onclick = () => {
+
+            openFact(fact);
+
+        };
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+
+// ОТКРЫТЬ ФАКТ
+
+function openFact(fact) {
+
+    document.getElementById("modalIcon")
+        .textContent = fact.icon;
+
+    document.getElementById("modalTitle")
+        .textContent = fact.title;
+
+    document.getElementById("modalText")
+        .textContent = fact.text;
+
+    document.getElementById("modal")
+        .classList.add("show");
+}
+
+
+// ЗАКРЫТЬ
+
+function closeModal() {
+
+    document.getElementById("modal")
+        .classList.remove("show");
+
+}
+
+
+// СЛУЧАЙНЫЙ ФАКТ
+
+function randomFact() {
+
+    const random =
+        Math.floor(Math.random() * facts.length);
+
+    openFact(facts[random]);
+
+}
+
+
+// ESC
+
+document.addEventListener("keydown", event => {
+
+    if(event.key === "Escape") {
+
+        closeModal();
+
+    }
+
+});
+
+
+// КЛИК ПО ФОНУ
+
+document.getElementById("modal")
+    .addEventListener("click", event => {
+
+        if(event.target.id === "modal") {
+
+            closeModal();
+
+        }
+
+    });
+
+
+// ЗАПУСК
+
+renderCategories();
+renderFacts();
+
+</script>
+
+</body>
+</html>
